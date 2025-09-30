@@ -6,27 +6,50 @@
     <title>SO Library</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
+    <div class="container-fluid p-0">
+        <div class="row g-0">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <h1 class="h4">SO Library</h1>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ url_for('index') }}">
-                                Book Titles
-                            </a>
-                        </li>
-                    </ul>
+            <div class="col-xl-2 col-lg-3 col-md-4 sidebar">
+                <div class="sidebar-content">
+                    <!-- Logo/Brand -->
+                    <div class="brand-section">
+                        <h2 class="text-white mb-0">SO Library</h2>
+                    </div>
+                    
+                    <!-- Navigation -->
+                    <nav class="sidebar-nav">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link text-white d-flex align-items-center" href="{{ url_for('index') }}">
+                                    <i class="fas fa-book me-3"></i>
+                                    <span>Book Titles</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
+            <!-- End of sidebar -->
 
-            <!-- Main content -->
-            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                {% block content %}{% endblock %}
+            <!-- Top Navigation Bar -->
+            <div class="col-xl-10 col-lg-9 col-md-8 ms-auto bg-info fixed-top py-2 top-navbar">
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <h4 class="text-light text-uppercase mb-0">{{ panel or 'BOOK TITLES' }}</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- End of top navigation -->
+
+            <!-- Main content area -->
+            <div class="col-xl-10 col-lg-9 col-md-8 main-content">
+                <!-- Content with top padding to account for fixed navbar -->
+                <div class="content-area">
+                    {% block content %}{% endblock %}
+                </div>
             </div>
         </div>
     </div>
