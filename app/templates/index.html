@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>BOOK TITLES</h2>
+<p>Number of titles: {{ books|length }}</p>
+
+<!-- Search by category -->
+<form method="GET">
+    <div class="mb-3">
+        <label for="category" class="form-label">Search by category:</label>
+        <select class="form-select" id="category" name="category">
+            <option value="">All</option>
+            <option value="Children" {% if category=='Children' %}selected{% endif %}>Children</option>
+            <option value="Teens" {% if category=='Teens' %}selected{% endif %}>Teens</option>
+            <option value="Adult" {% if category=='Adult' %}selected{% endif %}>Adult</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<hr>
+
+<!-- List of books -->
+{% for book in books %}
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-2">
+            <img src="{{ book.url }}" class="img-fluid rounded-start" alt="{{ book.title }}">
+        </div>
+        <div class="col-md-10">
+            <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text">By {{ book.authors | join(', ') }}</p>
+                <p class="card-text">Category: {{ book.category | join(', ') }}</p>
+                <p class="card-text">Pages: {{ book.pages }}</p>
+                <p class="card-text">
+                    {{ book.description[0] }}
+                    {% if book.description|length > 2 %}
+                    <br><br>{{ book.description[-1] }}
+                    <br><a href="{{ url_for('book_details', book_id=loop.index0) }}">More details</a>
+                    {% elif book.description|length == 2 %}
+                    <br><br>{{ book.description[-1] }}
+                    <br><a href="{{ url_for('book_details', book_id=loop.index0) }}">More details</a>
+                    {% elif book.description|length > 1 %}
+                    ... <a href="{{ url_for('book_details', book_id=loop.index0) }}">More details</a>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

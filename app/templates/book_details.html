@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>BOOK DETAILS</h2>
+
+<div class="card">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="{{ book.url }}" class="img-fluid rounded-start" alt="{{ book.title }}">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text">By {{ book.authors | join(', ') }}</p>
+                <p class="card-text">Category: {{ book.category | join(', ') }}</p>
+                <p class="card-text">Pages: {{ book.pages }}</p>
+                <p class="card-text">
+                    {% for para in book.description %}
+                    <p>{{ para }}</p>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="{{ url_for('index') }}">Back to Book Titles</a>
+{% endblock %}
