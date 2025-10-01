@@ -1,0 +1,147 @@
+body {
+    background-color: #f8f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* --- Sidebar Styles --- */
+.sidebar {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/side-navbar-bg.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    z-index: 1000;
+}
+
+.sidebar .navbar-brand {
+    font-weight: bold;
+}
+
+.sidebar .bottom-border {
+    border-bottom: 1px solid #4a4a4a;
+}
+
+.sidebar .nav-link, .sidebar .btn {
+    background-color: transparent;
+    color: #fff;
+    text-align: left;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0;
+    border: none;
+    font-size: 1rem;
+}
+
+.sidebar .nav-link.active, .sidebar .btn.active {
+    background-color: #f8f9fa;
+    color: #333;
+    border-left: 5px solid #28a745;
+}
+
+.sidebar .nav-link:hover, .sidebar .btn:hover {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.sidebar .nav-link i, .sidebar .btn i {
+    margin-right: 0.5rem;
+}
+
+
+/* --- Top Navbar Styles --- */
+.top-navbar {
+    background-color: #d9e9d9 !important; /* Light green background */
+    z-index: 999;
+}
+
+.top-navbar h4 {
+    color: #333 !important;
+    font-weight: bold;
+}
+
+/* --- Main Content Styles --- */
+.main-content {
+    padding-top: 56px; /* Height of the top navbar */
+    margin-left: 16.66666667%; /* Offset for col-xl-2 */
+}
+
+.content-area {
+    padding: 20px;
+}
+
+/* Adjust main content margin for different screen sizes */
+@media (max-width: 1199.98px) {
+    .main-content {
+        margin-left: 25%; /* Offset for col-lg-3 */
+    }
+}
+
+@media (max-width: 991.98px) {
+    .main-content {
+        margin-left: 33.33333333%; /* Offset for col-md-4 */
+    }
+}
+
+@media (max-width: 767.98px) {
+    .main-content {
+        margin-left: 0; /* No offset on small screens */
+    }
+    .sidebar {
+        position: static;
+        min-height: auto;
+    }
+}
+
+
+/* --- Book & Filter Styles --- */
+.filter-bar {
+    background-color: #d9e9d9;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.book-card {
+    border: 1px solid #dee2e6;
+    margin-bottom: 1.5rem;
+}
+
+.book-card .card-body {
+    padding: 1.5rem;
+}
+
+.book-card .book-cover {
+    max-width: 150px;
+    height: auto;
+    object-fit: contain;
+}
+
+.book-card .book-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.book-card .book-author {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.book-card .book-meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+.book-card .book-description {
+    margin-top: 1rem;
+}
+
+.btn-details, .btn-search {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #fff;
+}
+
+.btn-details:hover, .btn-search:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
