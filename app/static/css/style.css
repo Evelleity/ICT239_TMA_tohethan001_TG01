@@ -1,147 +1,207 @@
 body {
-    background-color: #f8f9fa;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #f8f9fa;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
 }
 
 /* --- Sidebar Styles --- */
 .sidebar {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/side-navbar-bg.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    min-height: 100vh;
-    z-index: 1000;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../images/side-navbar-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 1000;
+  height: 100vh;
+  box-shadow: rgb(153, 153, 153) 5px 7px 25px;
+  background-position: center center;
 }
 
 .sidebar .navbar-brand {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .sidebar .bottom-border {
-    border-bottom: 1px solid #4a4a4a;
+  border-bottom: 1px solid #4a4a4a;
 }
 
-.sidebar .nav-link, .sidebar .btn {
-    background-color: transparent;
-    color: #fff;
-    text-align: left;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0;
-    border: none;
-    font-size: 1rem;
+.sidebar .nav-link,
+.sidebar .btn {
+  background-color: transparent;
+  color: #fff;
+  text-align: left;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0;
+  border: none;
+  font-size: 1rem;
 }
 
-.sidebar .nav-link.active, .sidebar .btn.active {
-    background-color: #f8f9fa;
-    color: #333;
-    border-left: 5px solid #28a745;
+.sidebar .nav-link.active,
+.sidebar .btn.active {
+  background-color: #f8f9fa;
+  color: #333;
+  border-left: 5px solid #28a745;
 }
 
-.sidebar .nav-link:hover, .sidebar .btn:hover {
-    background-color: #343a40;
-    color: #fff;
+.sidebar .nav-link:hover,
+.sidebar .btn:hover {
+  background-color: #343a40;
+  color: #fff;
 }
 
-.sidebar .nav-link i, .sidebar .btn i {
-    margin-right: 0.5rem;
+.sidebar .nav-link i,
+.sidebar .btn i {
+  margin-right: 0.5rem;
 }
-
 
 /* --- Top Navbar Styles --- */
 .top-navbar {
-    background-color: #d9e9d9 !important; /* Light green background */
-    z-index: 999;
+  background-color: #d9e9d9 !important; /* Light green background */
+  z-index: 999;
+  margin-left: auto !important;
 }
 
 .top-navbar h4 {
-    color: #333 !important;
-    font-weight: bold;
+  color: #333 !important;
+  font-weight: bold;
 }
 
 /* --- Main Content Styles --- */
 .main-content {
-    padding-top: 56px; /* Height of the top navbar */
-    margin-left: 16.66666667%; /* Offset for col-xl-2 */
+  padding-top: 56px; /* Adjust this value to match the height of your top-navbar */
 }
 
 .content-area {
-    padding: 20px;
+  padding: 20px;
 }
 
 /* Adjust main content margin for different screen sizes */
-@media (max-width: 1199.98px) {
-    .main-content {
-        margin-left: 25%; /* Offset for col-lg-3 */
-    }
-}
-
-@media (max-width: 991.98px) {
-    .main-content {
-        margin-left: 33.33333333%; /* Offset for col-md-4 */
-    }
-}
-
 @media (max-width: 767.98px) {
-    .main-content {
-        margin-left: 0; /* No offset on small screens */
-    }
-    .sidebar {
-        position: static;
-        min-height: auto;
-    }
+  .main-content {
+    padding-top: 0; /* Remove padding when layout stacks */
+  }
+  .sidebar {
+    position: static;
+    height: auto;
+  }
+  .top-navbar {
+    position: static;
+  }
 }
-
 
 /* --- Book & Filter Styles --- */
 .filter-bar {
-    background-color: #d9e9d9;
-    padding: 1rem;
-    border-radius: 0.25rem;
-    margin-bottom: 1.5rem;
+  background-color: #d9e9d9;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .book-card {
-    border: 1px solid #dee2e6;
-    margin-bottom: 1.5rem;
+  border: 1px solid #dee2e6;
+  margin-bottom: 1.5rem;
 }
 
 .book-card .card-body {
-    padding: 1.5rem;
+  padding: 1.5rem;
 }
 
 .book-card .book-cover {
-    max-width: 150px;
-    height: auto;
-    object-fit: contain;
+  max-width: 150px;
+  height: auto;
+  object-fit: contain;
 }
 
 .book-card .book-title {
-    font-weight: bold;
-    font-size: 1.25rem;
+  font-weight: bold;
+  font-size: 1.25rem;
 }
 
 .book-card .book-author {
-    font-size: 1rem;
-    color: #6c757d;
+  font-size: 1rem;
+  color: #6c757d;
 }
 
 .book-card .book-meta {
-    font-size: 0.9rem;
-    color: #6c757d;
-    margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
 }
 
 .book-card .book-description {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
-.btn-details, .btn-search {
-    background-color: #28a745;
-    border-color: #28a745;
-    color: #fff;
+.btn-details,
+.btn-search {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: #fff;
 }
 
-.btn-details:hover, .btn-search:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
+.btn-details:hover,
+.btn-search:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+/* --- Toggler Button Styles (Visible on Mobile) --- */
+.navbar-toggler {
+  padding: 0.25rem 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+/* Toggler icon (the "hamburger") */
+.navbar-toggler-icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  background: no-repeat center center;
+  background-size: 100% 100%;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Specific icon for a light-themed navbar */
+.navbar-light .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* --- Collapsible Content Styles --- */
+
+/* NOT EXPANDED (Default State on Mobile) */
+/* This is the most important rule: it hides the content by default. */
+.collapse:not(.show) {
+  display: none;
+}
+
+/* Base styles for the container that collapses */
+.navbar-collapse {
+  -ms-flex-preferred-size: 100%;
+  flex-basis: 100%;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+/* --- Responsive Behavior (Switches between mobile and desktop) --- */
+
+/* On screens 768px and wider... */
+@media (min-width: 768px) {
+  /* Hide the toggler button */
+  .navbar-expand-md .navbar-toggler {
+    display: none;
+  }
+
+  /* EXPANDED (Default State on Desktop) */
+  /* Force the collapsible content to be visible and act as a flex container */
+  .navbar-expand-md .navbar-collapse {
+    display: flex !important;
+    flex-basis: auto;
+  }
 }
