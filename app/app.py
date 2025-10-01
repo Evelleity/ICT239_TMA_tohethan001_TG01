@@ -20,7 +20,7 @@ def index():
 @app.route('/book/<int:book_id>')
 def book_details(book_id):
     book = books.all_books[book_id]
-    return render_template('book_details.html', book=book)
+    return render_template('book_details.html', book=book, panel='BOOK DETAILS')
 
 if __name__ == '__main__':
     app.run(debug=True)
