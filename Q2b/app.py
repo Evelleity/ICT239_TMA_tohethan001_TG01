@@ -1,7 +1,16 @@
 from flask import Flask, render_template, request
+from flask_mongoengine import MongoEngine
 import books
-
+ 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'dev-secret-key'
+app.config['MONGODB_SETTINGS'] = {
+    'db': 'ict_239_library',
+    'host': 'localhost',
+    'port': 27017
+}
+
+db = MongoEngine(app)
 
 @app.route('/')
 def index():
