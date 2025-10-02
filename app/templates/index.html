@@ -1,31 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<!-- Content section with search and book count -->
-<div class="content-section">
-    <div class="row align-items-center mb-4">
+<!-- Filter Bar -->
+<div class="filter-bar">
+    <div class="row align-items-center">
         <div class="col-md-6">
-            <p class="book-count">Number of titles: {{ books|length }}</p>
+            <p class="mb-0">Number of titles: {{ books|length }}</p>
         </div>
         <div class="col-md-6">
-            <!-- Search by category -->
-            <form method="GET" class="d-flex align-items-end justify-content-end">
-                <div class="me-3">
-                    <label for="category" class="form-label category-label">Category</label>
-                    <select class="form-select category-select" id="category" name="category">
+            <form method="GET" class="row g-2 align-items-center justify-content-end">
+                <div class="col-auto">
+                    <label for="category" class="col-form-label">Category:</label>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select" id="category" name="category">
                         <option value="">All</option>
                         <option value="Children" {% if category=='Children' %}selected{% endif %}>Children</option>
                         <option value="Teens" {% if category=='Teens' %}selected{% endif %}>Teens</option>
                         <option value="Adult" {% if category=='Adult' %}selected{% endif %}>Adult</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-success search-btn">Search</button>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-search">Search</button>
+                </div>
             </form>
         </div>
     </div>
+</div>
 
-    <!-- List of books -->
+<hr>
+
+<!-- List of books -->
     {% for book in books %}
     <div class="card mb-3 book-card">
         <div class="row g-0">
