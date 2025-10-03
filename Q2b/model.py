@@ -1,6 +1,6 @@
 from flask_mongoengine import Document
 from mongoengine.fields import (
-    StringField, ListField, IntField, BooleanField
+    StringField, ListField, IntField, BooleanField, ReferenceField, DateTimeField
 )
 import books as book_data # Import the hardcoded book data
 
@@ -13,7 +13,7 @@ class Book(Document):
     genres = ListField(StringField())
     category = StringField()
     url = StringField()
-    description = StringField()
+    description = ListField(StringField())
     pages = IntField()
     available = BooleanField()
     copies = IntField()
@@ -52,3 +52,25 @@ class Book(Document):
             print("Database seeded successfully.")
         else:
             print("Database already contains data. Skipping seed.")
+
+class User(Document):
+    """
+    User model for the library database
+    """
+    email = StringField(required=True, unique=True)
+    password = StringField(required=True)
+    name = StringField()
+
+    meta = {'collection': 'users'}
+
+class Loan(Document):
+    """
+    Loan model for the library database
+    """
+    member = ReferenceField(User, required=True)
+    book = ReferenceField(Book, required=True)
+    borrowDate = DateTimeField(required=True)
+    returnDate = DateTimeField()
+    renewCount = IntField(default=0)
+
+    meta = {'collection': 'loans'}

@@ -33,5 +33,19 @@ def book_details(book_id):
 
     return render_template('book_details.html', book=book, panel='BOOK DETAILS')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """Render the user registration page.
+
+    If this later needs to process a submitted form, add the POST handling
+    logic here before returning or redirecting. For now it simply serves
+    the template.
+    """
+    # Placeholder for future form handling:
+    # if request.method == 'POST':
+    #     form_data = request.form
+    #     # TODO: validate & persist user, then redirect
+    return render_template('register.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
