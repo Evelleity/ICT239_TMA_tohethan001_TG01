@@ -60,6 +60,7 @@ class User(Document):
     email = StringField(required=True, unique=True)
     password = StringField(required=True)
     name = StringField()
+    is_admin = BooleanField(default=False)
 
     meta = {'collection': 'users'}
 

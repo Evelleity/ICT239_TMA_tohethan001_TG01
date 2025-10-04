@@ -205,3 +205,95 @@ body {
     flex-basis: auto;
   }
 }
+
+/* --- Auth/Register Page Styles --- */
+.auth-container {
+  max-width: 420px;
+  margin: 2rem auto;
+  padding: 2rem 2.2rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
+}
+.auth-container h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.8rem;
+  letter-spacing: .5px;
+  text-align: center;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+.form-group label {
+  font-weight: 600;
+  margin-bottom: .35rem;
+  font-size: .9rem;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: #333;
+}
+.form-group input {
+  padding: .7rem .85rem;
+  border: 1px solid #cfd3d8;
+  border-radius: 6px;
+  font-size: .95rem;
+  background: #fdfdfd;
+  transition: border-color .2s, box-shadow .2s;
+}
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+  background: #fff;
+}
+.error {
+  color: #b00020;
+  font-size: .75rem;
+  margin-top: .35rem;
+}
+.messages {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+.messages li {
+  padding: .65rem .85rem;
+  margin-bottom: .5rem;
+  border-radius: 6px;
+  font-size: .85rem;
+}
+.messages li.success { background: #ecfdf5; color: #065f46; border: 1px solid #10b981; }
+.messages li.error { background: #fef2f2; color: #991b1b; border: 1px solid #dc2626; }
+.btn-primary {
+  width: 100%;
+  padding: .85rem 1rem;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: .5px;
+  font-size: .95rem;
+  transition: background .2s, transform .08s;
+}
+.btn-primary:hover { background: #1d4ed8; }
+.btn-primary:active { transform: translateY(1px); }
+.alt-link {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: .85rem;
+  color: #555;
+}
+.alt-link a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+.alt-link a:hover { text-decoration: underline; }
+@media (max-width:520px){
+  .auth-container { margin: 1.2rem 1rem; padding: 1.6rem 1.4rem; }
+}
