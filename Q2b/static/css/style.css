@@ -155,6 +155,32 @@ body {
   border-color: #1e7e34;
 }
 
+/* Loan button (same palette, slightly different shade for distinction) */
+.btn-loan {
+  background-color: #23913d;
+  border-color: #23913d;
+  color: #fff;
+}
+.btn-loan:hover {
+  background-color: #1c7732;
+  border-color: #1a6c2d;
+  color: #fff;
+}
+
+/* Unavailable button (disabled state styling) */
+.btn-unavailable {
+  background-color: #c82333;
+  border-color: #bd2130;
+  color: #fff;
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+.btn-unavailable:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+  color: #fff;
+}
+
 /* --- Toggler Button Styles (Visible on Mobile) --- */
 .navbar-toggler {
   padding: 0.25rem 0.75rem;

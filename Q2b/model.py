@@ -50,6 +50,46 @@ class Book(Document):
         """Convenience accessor for templates: returns first paragraph or empty string."""
         return self.description[0] if self.description else ""
 
+    # -------------------- Availability Helpers (Part b iii) --------------------
+    def can_borrow(self) -> bool:
+        """Return True if at least one copy is available to borrow."""
+        return (self.available or 0) > 0
+
+    def can_return(self) -> bool:
+        """Return True if it makes sense to increment availability (i.e., not already at max copies)."""
+        if self.copies is None:
+            return False  # copies must be defined to reason about returns
+        return (self.available or 0) < self.copies
+
+    def borrow_one(self):
+        """Attempt to decrement availability when a copy is borrowed.
+
+        Returns (success_bool, message)
+        """
+        if not self.can_borrow():
+            return False, "No available copies to borrow."
+        self.available -= 1
+        if self.available < 0:  # defensive floor
+            self.available = 0
+            return False, "Availability underflow prevented."
+        self.save()
+        return True, "Book availability decremented."
+
+    def return_one(self):
+        """Attempt to increment availability when a copy is returned.
+
+        Returns (success_bool, message)
+        """
+        if not self.can_return():
+            return False, "Return invalid: availability already at maximum copies."
+        self.available += 1
+        # Cap just in case
+        if self.available > self.copies:
+            self.available = self.copies
+            return False, "Availability overflow corrected to copies count."
+        self.save()
+        return True, "Book availability incremented."
+
     @staticmethod
     def init_db():
         """
@@ -180,128 +220,127 @@ class Loan(Document):
         ]
     }
 
-    # # Constants / configuration
-    # LOAN_PERIOD_DAYS = 14
-    # MAX_RENEWS = 2
-    # RANDOM_PAST_MIN = 10  # creation: borrow date = today - rand(10..20)
-    # RANDOM_PAST_MAX = 20
-    # RANDOM_FUTURE_MIN = 10  # renew/return generation relative to existing borrow date
-    # RANDOM_FUTURE_MAX = 20
+    # Constants / configuration
+    LOAN_PERIOD_DAYS = 14
+    MAX_RENEWS = 2
+    RANDOM_PAST_MIN = 10  # creation: borrow date = today - rand(10..20)
+    RANDOM_PAST_MAX = 20
+    RANDOM_FUTURE_MIN = 10  # renew/return generation relative to existing borrow date
+    RANDOM_FUTURE_MAX = 20
 
-    # # -------------------- Creation & Retrieval --------------------
-    # @classmethod
-    # def _random_past_borrow_date(cls) -> datetime:
-    #     return datetime.utcnow() - timedelta(days=randint(cls.RANDOM_PAST_MIN, cls.RANDOM_PAST_MAX))
+    # -------------------- Creation & Retrieval --------------------
+    @classmethod
+    def _random_past_borrow_date(cls) -> datetime:
+        return datetime.utcnow() - timedelta(days=randint(cls.RANDOM_PAST_MIN, cls.RANDOM_PAST_MAX))
 
-    # @classmethod
-    # def _random_future_date_from(cls, base_dt: datetime) -> datetime:
-    #     candidate = base_dt + timedelta(days=randint(cls.RANDOM_FUTURE_MIN, cls.RANDOM_FUTURE_MAX))
-    #     # Cannot be later than 'now'
-    #     now = datetime.utcnow()
-    #     return candidate if candidate <= now else now
+    @classmethod
+    def _random_future_date_from(cls, base_dt: datetime) -> datetime:
+        candidate = base_dt + timedelta(days=randint(cls.RANDOM_FUTURE_MIN, cls.RANDOM_FUTURE_MAX))
+        # Cannot be later than 'now'
+        now = datetime.utcnow()
+        return candidate if candidate <= now else now
 
-    # @classmethod
-    # def create_loan(cls, user: User, book: Book):
-    #     """Attempt to create a new loan.
+    @classmethod
+    def create_loan(cls, user: User, book: Book):
+        """Attempt to create a new loan.
 
-    #     Returns: (loan, created_bool, message)
-    #     """
-    #     # Check existing active loan
-    #     existing = cls.objects(member=user, book=book, return_date__exists=False).first()
-    #     if existing:
-    #         return existing, False, "You already have this book on loan."
-    #     if book.available <= 0:
-    #         return None, False, "No available copies for this title."
+        Returns: (loan, created_bool, message)
+        """
+        # Check existing active loan
+        existing = cls.objects(member=user, book=book, return_date__exists=False).first()
+        if existing:
+            return existing, False, "You already have this book on loan."
+        if book.available <= 0:
+            return None, False, "No available copies for this title."
 
-    #     borrow_date = cls._random_past_borrow_date()
-    #     due_date = borrow_date + timedelta(days=cls.LOAN_PERIOD_DAYS)
+        borrow_date = cls._random_past_borrow_date()
+        due_date = borrow_date + timedelta(days=cls.LOAN_PERIOD_DAYS)
 
-    #     loan = cls(member=user, book=book, borrow_date=borrow_date, due_date=due_date)
-    #     loan.save()
+        loan = cls(member=user, book=book, borrow_date=borrow_date, due_date=due_date)
+        loan.save()
 
-    #     # Decrement availability
-    #     book.available -= 1
-    #     if book.available < 0:
-    #         book.available = 0  # safety
-    #     book.save()
-    #     return loan, True, "Loan created successfully."
+        # Decrement availability using Book helper
+        success, _ = book.borrow_one()
+        if not success:
+            # Rollback loan if borrow failed (extremely unlikely due to earlier check)
+            loan.delete()
+            return None, False, "Failed to adjust availability."
+        return loan, True, "Loan created successfully."
 
-    # @classmethod
-    # def for_user(cls, user: User):
-    #     return cls.objects(member=user).order_by('-borrow_date')
+    @classmethod
+    def for_user(cls, user: User):
+        return cls.objects(member=user).order_by('-borrow_date')
 
-    # @classmethod
-    # def get_user_loan(cls, user: User, loan_id: str):
-    #     return cls.objects(member=user, id=loan_id).first()
+    @classmethod
+    def get_user_loan(cls, user: User, loan_id: str):
+        return cls.objects(member=user, id=loan_id).first()
 
-    # # -------------------- State & Helper Properties --------------------
-    # @property
-    # def is_returned(self) -> bool:
-    #     return self.return_date is not None
+    # -------------------- State & Helper Properties --------------------
+    @property
+    def is_returned(self) -> bool:
+        return self.return_date is not None
 
-    # @property
-    # def is_overdue(self) -> bool:
-    #     return (not self.is_returned) and datetime.utcnow() > self.due_date
+    @property
+    def is_overdue(self) -> bool:
+        return (not self.is_returned) and datetime.utcnow() > self.due_date
 
-    # @property
-    # def can_renew(self) -> bool:
-    #     return (not self.is_returned) and (not self.is_overdue) and self.renew_count < self.MAX_RENEWS
+    @property
+    def can_renew(self) -> bool:
+        return (not self.is_returned) and (not self.is_overdue) and self.renew_count < self.MAX_RENEWS
 
-    # @property
-    # def can_return(self) -> bool:
-    #     return not self.is_returned
+    @property
+    def can_return(self) -> bool:
+        return not self.is_returned
 
-    # @property
-    # def can_delete(self) -> bool:
-    #     return self.is_returned
+    @property
+    def can_delete(self) -> bool:
+        return self.is_returned
 
-    # # -------------------- Actions --------------------
-    # def renew(self):
-    #     """Renew this loan if possible.
-    #     Returns (success_bool, message).
-    #     """
-    #     if not self.can_renew:
-    #         if self.is_returned:
-    #             return False, "Cannot renew a returned loan."
-    #         if self.is_overdue:
-    #             return False, "Cannot renew an overdue loan."
-    #         return False, "Maximum renewals reached."
+    # -------------------- Actions --------------------
+    def renew(self):
+        """Renew this loan if possible.
+        Returns (success_bool, message).
+        """
+        if not self.can_renew:
+            if self.is_returned:
+                return False, "Cannot renew a returned loan."
+            if self.is_overdue:
+                return False, "Cannot renew an overdue loan."
+            return False, "Maximum renewals reached."
 
-    #     # Generate new borrow date in the 'past' relative to today but after original borrow_date
-    #     new_borrow_date = self._random_future_date_from(self.borrow_date)
-    #     # Ensure monotonic increase
-    #     if new_borrow_date <= self.borrow_date:
-    #         new_borrow_date = datetime.utcnow()
-    #     self.borrow_date = new_borrow_date
-    #     self.due_date = self.borrow_date + timedelta(days=self.LOAN_PERIOD_DAYS)
-    #     self.renew_count += 1
-    #     self.save()
-    #     return True, "Loan renewed."
+        # Generate new borrow date in the 'past' relative to today but after original borrow_date
+        new_borrow_date = self._random_future_date_from(self.borrow_date)
+        # Ensure monotonic increase
+        if new_borrow_date <= self.borrow_date:
+            new_borrow_date = datetime.utcnow()
+        self.borrow_date = new_borrow_date
+        self.due_date = self.borrow_date + timedelta(days=self.LOAN_PERIOD_DAYS)
+        self.renew_count += 1
+        self.save()
+        return True, "Loan renewed."
 
-    # def return_book(self):
-    #     """Return this loan if possible.
-    #     Returns (success_bool, message).
-    #     """
-    #     if not self.can_return:
-    #         return False, "Loan already returned."
+    def return_book(self):
+        """Return this loan if possible.
+        Returns (success_bool, message).
+        """
+        if not self.can_return:
+            return False, "Loan already returned."
 
-    #     self.return_date = self._random_future_date_from(self.borrow_date)
-    #     if self.return_date < self.borrow_date:
-    #         self.return_date = datetime.utcnow()
-    #     self.save()
+        self.return_date = self._random_future_date_from(self.borrow_date)
+        if self.return_date < self.borrow_date:
+            self.return_date = datetime.utcnow()
+        self.save()
+        # Restore availability via helper
+        self.book.return_one()
+        return True, "Book returned."
 
-    #     # Restore availability
-    #     self.book.available += 1
-    #     self.book.save()
-    #     return True, "Book returned."
+    def delete_if_allowed(self):
+        if not self.can_delete:
+            return False, "Only returned loans can be deleted."
+        self.delete()
+        return True, "Loan deleted."
 
-    # def delete_if_allowed(self):
-    #     if not self.can_delete:
-    #         return False, "Only returned loans can be deleted."
-    #     self.delete()
-    #     return True, "Loan deleted."
-
-    # # -------------------- Validation Hook --------------------
-    # def clean(self):
-    #     if not self.due_date and self.borrow_date:
-    #         self.due_date = self.borrow_date + timedelta(days=self.LOAN_PERIOD_DAYS)
+    # -------------------- Validation Hook --------------------
+    def clean(self):
+        if not self.due_date and self.borrow_date:
+            self.due_date = self.borrow_date + timedelta(days=self.LOAN_PERIOD_DAYS)

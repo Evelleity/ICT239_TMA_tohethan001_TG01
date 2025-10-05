@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, g
 from flask_mongoengine import MongoEngine
-from model import Book, User, seed_users
+from model import Book, User, seed_users, Loan
 from bson import ObjectId  # if needed, often not required directly
 from mongoengine import DoesNotExist
 
@@ -55,10 +55,12 @@ def load_current_user():
 def inject_user():
     # avatar_url retained for future custom images; current UI uses a Font Awesome icon instead
     avatar_url = url_for('static', filename='images/default-avatar.svg')
+    from datetime import datetime
     return {
         'current_user': g.get('current_user'),
         'is_admin': bool(session.get('is_admin')),
-        'avatar_url': avatar_url
+        'avatar_url': avatar_url,
+        'utcnow': datetime.utcnow
     }
 
 @app.route('/')
@@ -82,6 +84,63 @@ def book_details(book_id):
         # handle 404 appropriately
         return "Book not found", 404
     return render_template('book_details.html', book=book, panel='BOOK DETAILS')
+
+# -------------------- Loan Routes --------------------
+@app.route('/loans')
+@login_required
+def loans_list():
+    user = g.current_user
+    loans = Loan.for_user(user)
+    return render_template('loans.html', panel='CURRENT LOANS', loans=loans)
+
+@app.route('/loan/create/<book_id>', methods=['POST'])
+@login_required
+def create_loan(book_id):
+    user = g.current_user
+    try:
+        book = Book.objects.get(id=book_id)
+    except Book.DoesNotExist:
+        flash('Book not found.', 'danger')
+        return redirect(url_for('index'))
+    loan, created, msg = Loan.create_loan(user, book)
+    flash(msg, 'success' if created else 'warning')
+    return redirect(request.referrer or url_for('index'))
+
+@app.route('/loan/<loan_id>/renew', methods=['POST'])
+@login_required
+def renew_loan(loan_id):
+    user = g.current_user
+    loan = Loan.get_user_loan(user, loan_id)
+    if not loan:
+        flash('Loan not found.', 'danger')
+    else:
+        ok, msg = loan.renew()
+        flash(msg, 'success' if ok else 'warning')
+    return redirect(url_for('loans_list'))
+
+@app.route('/loan/<loan_id>/return', methods=['POST'])
+@login_required
+def return_loan(loan_id):
+    user = g.current_user
+    loan = Loan.get_user_loan(user, loan_id)
+    if not loan:
+        flash('Loan not found.', 'danger')
+    else:
+        ok, msg = loan.return_book()
+        flash(msg, 'success' if ok else 'warning')
+    return redirect(url_for('loans_list'))
+
+@app.route('/loan/<loan_id>/delete', methods=['POST'])
+@login_required
+def delete_loan(loan_id):
+    user = g.current_user
+    loan = Loan.get_user_loan(user, loan_id)
+    if not loan:
+        flash('Loan not found.', 'danger')
+    else:
+        ok, msg = loan.delete_if_allowed()
+        flash(msg, 'success' if ok else 'warning')
+    return redirect(url_for('loans_list'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
