@@ -79,14 +79,70 @@ class Book(Document):
             print("Database already contains data. Skipping seed.")
 
 class User(Document):
-    """
-    User model for the library database
-    """
-    email = StringField(required=True, unique=True)
-    password = StringField(required=True, unique=True)
-    name = StringField(required=True)
+    """User model for authentication/registration.
 
-    meta = {'collection': 'users'}
+    Extended with email, display name, and admin flag.
+    """
+    username = StringField(required=True, unique=True)
+    email = StringField(required=True, unique=True)
+    name = StringField(required=True)
+    password_hash = StringField(required=True)
+    is_admin = BooleanField(default=False)
+    created_at = DateTimeField(default=datetime.utcnow)
+
+    meta = {'collection': 'users', 'indexes': ['username', 'email', 'is_admin']}
+
+    # Convenience helpers kept simple; you could swap for passlib or werkzeug.security
+    def set_password(self, raw_password: str):
+        # Basic hashing (NOT for production). Replace with werkzeug.security.generate_password_hash
+        import hashlib
+        self.password_hash = hashlib.sha256(raw_password.encode('utf-8')).hexdigest()
+
+    def check_password(self, raw_password: str) -> bool:
+        import hashlib
+        return self.password_hash == hashlib.sha256(raw_password.encode('utf-8')).hexdigest()
+
+def seed_users():
+    """Seed specified admin and non-admin users if they do not exist.
+
+    Requirements:
+      - Admin: email=admin@lib.sg, username=admin, name=Admin, password=12345
+      - Member: email=poh@lib.sg, username=poh, name=Peter Oh, password=12345
+    """
+    defaults = [
+        {
+            'username': 'admin',
+            'email': 'admin@lib.sg',
+            'name': 'Admin',
+            'password': '12345',
+            'is_admin': True,
+        },
+        {
+            'username': 'poh',
+            'email': 'poh@lib.sg',
+            'name': 'Peter Oh',
+            'password': '12345',
+            'is_admin': False,
+        }
+    ]
+    created = []
+    for data in defaults:
+        existing = User.objects(username=data['username']).first() or User.objects(email=data['email']).first()
+        if existing:
+            continue
+        u = User(
+            username=data['username'],
+            email=data['email'],
+            name=data['name'],
+            is_admin=data['is_admin']
+        )
+        u.set_password(data['password'])
+        u.save()
+        created.append(data['username'])
+    if created:
+        print(f"Seeded users: {', '.join(created)}")
+    else:
+        print("Seed users already present; skipping.")
 
 class Loan(Document):
     """Loan model & domain logic for user book loans.
