@@ -41,18 +41,17 @@
                 <div class="card-body">
                     <h5 class="card-title book-title">{{ book.title }}</h5>
                     <p class="card-text book-author">By {{ book.authors | join(', ') }}</p>
-                    <p class="card-text book-meta">Category: {{ book.category | join(', ') }}</p>
+                    <p class="card-text book-meta">Category: {{ book.category }}</p>
                     <p class="card-text book-meta">Pages: {{ book.pages }}</p>
                     <p class="card-text book-description">
-                        {{ book.description[0] }}
-                        {% if book.description|length > 2 %}
-                        <br><br>{{ book.description[-1] }}
-                        <br><a href="{{ url_for('book_details', book_id=loop.index0) }}" class="more-details-link">More details</a>
-                        {% elif book.description|length == 2 %}
-                        <br><br>{{ book.description[-1] }}
-                        <br><a href="{{ url_for('book_details', book_id=loop.index0) }}" class="more-details-link">More details</a>
-                        {% elif book.description|length > 1 %}
-                        ... <a href="{{ url_for('book_details', book_id=loop.index0) }}" class="more-details-link">More details</a>
+                        {% if book.description %}
+                            {{ book.description[0] }}
+                            {% if book.description|length > 2 %}
+                                <br><br>{{ book.description[-1] }}
+                            {% elif book.description|length == 2 %}
+                                <br><br>{{ book.description[-1] }}
+                            {% endif %}
+                            <br><a href="{{ url_for('book_details', book_id=book.id) }}" class="more-details-link">More details</a>
                         {% endif %}
                     </p>
                 </div>

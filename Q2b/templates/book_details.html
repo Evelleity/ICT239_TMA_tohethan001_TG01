@@ -10,13 +10,13 @@
             <div class="card-body">
                 <h5 class="card-title">{{ book.title }}</h5>
                 <p class="card-text">By {{ book.authors | join(', ') }}</p>
-                <p class="card-text">Category: {{ book.category | join(', ') }}</p>
+                <p class="card-text">Category: {{ book.category }}</p>
                 <p class="card-text">Pages: {{ book.pages }}</p>
-                <p class="card-text">
+                <div class="card-text">
                     {% for para in book.description %}
-                    <p>{{ para }}</p>
+                        <p>{{ para }}</p>
                     {% endfor %}
-                </p>
+                </div>
             </div>
         </div>
     </div>

@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request
 from flask_mongoengine import MongoEngine
 from model import Book
- 
+from bson import ObjectId  # if needed, often not required directly
+from mongoengine import DoesNotExist
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dev-secret-key'
 app.config['MONGODB_SETTINGS'] = {
@@ -27,10 +29,13 @@ def index():
 
     return render_template('index.html', books=filtered_books, category=category)
 
-@app.route('/book/<int:book_id>')
+@app.route('/book/<book_id>')
 def book_details(book_id):
-    book = book.all_books[book_id]
-
+    try:
+        book = Book.objects.get(id=book_id)
+    except Book.DoesNotExist:
+        # handle 404 appropriately
+        return "Book not found", 404
     return render_template('book_details.html', book=book, panel='BOOK DETAILS')
 
 if __name__ == '__main__':
