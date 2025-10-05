@@ -42,6 +42,17 @@ body {
   border-left: 5px solid #28a745;
 }
 
+.sidebar-user {
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+}
+
+/* .sidebar-avatar no longer used (switched to icon) */
+/* .sidebar-avatar {
+  border: 2px solid rgba(255,255,255,0.6);
+  object-fit: cover;
+} */
+
 .sidebar .nav-link:hover,
 .sidebar .btn:hover {
   background-color: #343a40;
@@ -204,4 +215,18 @@ body {
     display: flex !important;
     flex-basis: auto;
   }
+}
+
+/* --- User Avatar / Pill --- */
+/* .avatar-img retained for potential future custom image avatars
+.avatar-img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.6);
+} */
+
+.user-pill {
+  background: rgba(0,0,0,0.08);
+  backdrop-filter: blur(2px);
 }

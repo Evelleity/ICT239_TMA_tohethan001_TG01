@@ -42,52 +42,55 @@
           <div class="row">
             <!-- Sidebar -->
             <div class="col-xl-2 col-lg-3 col-md-4 sidebar fixed-top">
-              <a
-                href="#"
-                class="navbar-brand text-white d-block mx-auto text-center py-3 mb-4 bottom-border"
-                >SG Library</a
-              >
-              <ul class="navbar-nav flex-column mt-4">
+              <a href="{{ url_for('index') }}" class="navbar-brand text-white d-block mx-auto text-center py-3 mb-2">SG Library</a>
+              <hr class="text-white my-1">
+              {% if current_user %}
+              <a href="{{ url_for('profile') }}" class="text-decoration-none">
+                <div class="sidebar-user d-flex align-items-center px-3 py-2 mb-2">
+                  <i class="fas fa-user-circle fa-2x text-white me-2"></i>
+                  <div class="text-white small fw-semibold">{{ current_user.name }}</div>
+                </div>
+              </a>
+              <hr class="text-white my-2">
+              {% endif %}
+              <ul class="navbar-nav flex-column mt-2">
                 <li class="nav-item">
-                  <a
-                    href="{{ url_for('index') }}"
-                    class="nav-link p-3 mb-2 sidebar-link active"
-                  >
+                  <a href="{{ url_for('index') }}" class="nav-link p-3 mb-2 sidebar-link">
                     <i class="fas fa-book-open fa-lg me-3"></i>Book Titles
                   </a>
                 </li>
-                <!-- Add other nav items here -->
-                 <li class="nav-item">
-                  <a
-                    href="{{ url_for('register') }}"
-                    class="nav-link p-3 mb-2 sidebar-link active"
-                  >
+                {% if is_admin %}
+                <li class="nav-item">
+                  <a href="{{ url_for('new_book') }}" class="nav-link p-3 mb-2 sidebar-link">
+                    <i class="fas fa-cloud-upload-alt fa-lg me-3"></i>New Book
+                  </a>
+                </li>
+                {% endif %}
+                {% if not current_user %}
+                <li class="nav-item">
+                  <a href="{{ url_for('register') }}" class="nav-link p-3 mb-2 sidebar-link">
                     <i class="fas fa-user-plus fa-lg me-3"></i>Register
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a
-                    href="{{ url_for('login') }}"
-                    class="nav-link p-3 mb-2 sidebar-link active"
-                  >
+                  <a href="{{ url_for('login') }}" class="nav-link p-3 mb-2 sidebar-link">
                     <i class="fas fa-user-lock fa-lg me-3"></i>Login
                   </a>
                 </li>
+                {% else %}
+                <li class="nav-item">
+                  <a href="{{ url_for('logout') }}" class="nav-link p-3 mb-2 sidebar-link">
+                    <i class="fas fa-sign-out-alt fa-lg me-3"></i>Logout
+                  </a>
+                </li>
+                {% endif %}
               </ul>
             </div>
             <!-- End of sidebar -->
 
             <!-- Top Navigation Bar -->
-            <div
-              class="col-xl-10 col-lg-9 col-md-8 offset-xl-2 offset-lg-3 offset-md-4 fixed-top py-2 top-navbar"
-            >
-              <div class="row align-items-center">
-                <div class="col-md-4">
-                  <h4 class="text-uppercase mb-0">
-                    {{ panel or 'BOOK TITLES' }}
-                  </h4>
-                </div>
-              </div>
+            <div class="col-xl-10 col-lg-9 col-md-8 offset-xl-2 offset-lg-3 offset-md-4 fixed-top py-2 top-navbar">
+              <h4 class="text-uppercase mb-0 ms-3">{{ panel or 'BOOK TITLES' }}</h4>
             </div>
             <!-- End of top navigation -->
           </div>

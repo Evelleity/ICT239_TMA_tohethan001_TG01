@@ -53,7 +53,13 @@ def load_current_user():
 
 @app.context_processor
 def inject_user():
-    return {'current_user': g.get('current_user'), 'is_admin': bool(session.get('is_admin'))}
+    # avatar_url retained for future custom images; current UI uses a Font Awesome icon instead
+    avatar_url = url_for('static', filename='images/default-avatar.svg')
+    return {
+        'current_user': g.get('current_user'),
+        'is_admin': bool(session.get('is_admin')),
+        'avatar_url': avatar_url
+    }
 
 @app.route('/')
 def index():
@@ -240,6 +246,12 @@ def new_book():
         form_data=form_data,
         created_book=created_book
     )
+
+@app.route('/profile')
+@login_required
+def profile():
+    user = g.get('current_user')
+    return render_template('profile.html', panel='PROFILE', user=user)
 
 if __name__ == '__main__':
     app.run(debug=True)
