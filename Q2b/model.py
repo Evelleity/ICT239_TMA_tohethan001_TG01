@@ -8,6 +8,13 @@ from random import randint
 import books as book_data # Import the hardcoded book data
 
 class Book(Document):
+    GENRES = [
+    "Animals", "Business", "Comics", "Communication", "Dark Academia",
+    "Emotion", "Fantasy", "Fiction", "Friendship", "Graphic Novels", "Grief",
+    "Historical Fiction", "Indigenous", "Inspirational", "Magic", "Mental Health",
+    "Nonfiction", "Personal Development", "Philosophy", "Picture Books", "Poetry",
+    "Productivity", "Psychology", "Romance", "School", "Self Help"
+    ]
     """
     Book model for the library database
     """

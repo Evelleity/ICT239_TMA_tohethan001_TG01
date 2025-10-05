@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+	<div class="row justify-content-center">
+		<div class="col-lg-10 col-xl-9">
+			{% if created_book %}
+			<div class="alert alert-success d-flex justify-content-between align-items-center">
+				<div>
+					<strong>{{ created_book.title }}</strong> created successfully.
+				</div>
+				<div>
+					<a class="btn btn-sm btn-outline-light" href="{{ url_for('book_details', book_id=created_book.id) }}">View Book</a>
+				</div>
+			</div>
+			{% endif %}
+			<form method="post" class="bg-white p-3 rounded shadow-sm" novalidate>
+				<div class="row mb-3">
+					<label class="col-md-2 col-form-label fw-semibold">Choose multiple<br>Genres:</label>
+					<div class="col-md-10">
+						<select name="genres" multiple size="8" class="form-select">
+							{% for g in genres %}
+							<option value="{{ g }}" {% if g in form_data.selected_genres %}selected{% endif %}>{{ g }}</option>
+							{% endfor %}
+						</select>
+						<div class="form-text">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</div>
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					<label class="col-md-2 col-form-label fw-semibold">Title:</label>
+					<div class="col-md-10"><input type="text" name="title" value="{{ form_data.title }}" class="form-control" required></div>
+				</div>
+
+				<div class="row mb-3">
+					<label class="col-md-2 col-form-label fw-semibold">Choose a category:</label>
+					<div class="col-md-10">
+						<select name="category" class="form-select">
+							<option value="">-- Select --</option>
+							{% for c in categories %}
+							<option value="{{ c }}" {% if form_data.category == c %}selected{% endif %}>{{ c }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					<label class="col-md-2 col-form-label fw-semibold">URL for Cover:</label>
+					<div class="col-md-10"><input type="url" name="url" value="{{ form_data.url }}" class="form-control" placeholder="https://..."></div>
+				</div>
+
+				<div class="row mb-4">
+					<label class="col-md-2 col-form-label fw-semibold">Description:</label>
+					<div class="col-md-10">
+						<textarea name="description" rows="6" class="form-control" placeholder="Enter each paragraph on a new line...">{{ form_data.description }}</textarea>
+					</div>
+				</div>
+
+				<div class="row mb-4">
+					<label class="col-md-2 col-form-label fw-semibold">Authors (separate with ;):</label>
+					<div class="col-md-10">
+						<textarea name="authors_text" rows="5" class="form-control" placeholder="Jane Doe; John Smith; A. N. Other">{{ form_data.authors_text }}</textarea>
+						<div class="form-text">Enter authors separated by a semicolon. Example: Jane Doe; John Smith; A. N. Other. Duplicates automatically removed.</div>
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					<label class="col-md-2 col-form-label fw-semibold">Number of pages:</label>
+					<div class="col-md-4"><input type="number" min="1" name="pages" value="{{ form_data.pages }}" class="form-control"></div>
+					<label class="col-md-2 col-form-label fw-semibold">Number of copies:</label>
+					<div class="col-md-4"><input type="number" min="1" name="copies" value="{{ form_data.copies }}" class="form-control" required></div>
+				</div>
+
+				<div class="d-flex justify-content-end mt-4">
+					<button type="submit" class="btn btn-success px-5">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
