@@ -97,6 +97,10 @@ def loans_list():
 @login_required
 def create_loan(book_id):
     user = g.current_user
+    # Prevent administrators from creating loans (business rule)
+    if session.get('is_admin'):
+        flash('Administrators cannot create loans.', 'warning')
+        return redirect(request.referrer or url_for('index'))
     try:
         book = Book.objects.get(id=book_id)
     except Book.DoesNotExist:

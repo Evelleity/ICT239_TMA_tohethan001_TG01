@@ -21,10 +21,12 @@
                 <div class="d-flex gap-2 flex-wrap">
                     <a href="{{ url_for('index') }}" class="btn btn-details btn-sm">Back to Book Titles</a>
                                 {% if book.available and book.available > 0 %}
-                                    {% if current_user %}
+                                    {% if current_user and not is_admin %}
                                         <form method="POST" action="{{ url_for('create_loan', book_id=book.id) }}" class="d-inline">
                                             <button type="submit" class="btn btn-loan btn-sm">Make a Loan</button>
                                         </form>
+                                    {% elif current_user and is_admin %}
+                                        <button class="btn btn-loan btn-sm disabled" aria-disabled="true">Admins cannot loan</button>
                                     {% else %}
                                         <a href="{{ url_for('login') }}" class="btn btn-loan btn-sm disabled" aria-disabled="true">Login to Loan</a>
                                     {% endif %}
