@@ -1,26 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="card">
-    <div class="row g-0">
-        <div class="col-md-4">
-            <img src="{{ book.url }}" class="img-fluid rounded-start" alt="{{ book.title }}">
+<div class="card book-detail-card">
+    <div class="row g-0 p-3">
+        <div class="col-md-3 col-lg-2 mb-3 mb-md-0 text-center">
+            <img src="{{ book.url }}" class="img-fluid rounded book-detail-image" alt="{{ book.title }}">
         </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">{{ book.title }}</h5>
-                <p class="card-text">By {{ book.authors | join(', ') }}</p>
-                <p class="card-text">Category: {{ book.category | join(', ') }}</p>
-                <p class="card-text">Pages: {{ book.pages }}</p>
-                <p class="card-text">
+        <div class="col-md-9 col-lg-10">
+            <div class="card-body pt-0 pt-md-2">
+                <h5 class="card-title mb-1">{{ book.title }}</h5>
+                <p class="card-text mb-2 fw-semibold">By {{ book.authors | join(', ') }}</p>
+                <p class="card-text small mb-1">Category: {{ book.category }}</p>
+                <p class="card-text small mb-1">Pages: {{ book.pages }}</p>
+                <p class="card-text small mb-3">Copies: {{ book.copies }} &nbsp; Available: {{ book.available }}</p>
+                <div class="card-text book-full-description mb-4">
                     {% for para in book.description %}
-                    <p>{{ para }}</p>
+                        <p class="mb-2">{{ para }}</p>
                     {% endfor %}
-                </p>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{{ url_for('index') }}" class="btn btn-details btn-sm">Back to Book Titles</a>
+                                {% if book.available and book.available > 0 %}
+                                    {% if current_user and not is_admin %}
+                                        <form method="POST" action="{{ url_for('create_loan', book_id=book.id) }}" class="d-inline">
+                                            <button type="submit" class="btn btn-loan btn-sm">Make a Loan</button>
+                                        </form>
+                                    {% elif current_user and is_admin %}
+                                        <button class="btn btn-loan btn-sm disabled" aria-disabled="true">Admins cannot loan</button>
+                                    {% else %}
+                                        <a href="{{ url_for('login') }}" class="btn btn-loan btn-sm disabled" aria-disabled="true">Login to Loan</a>
+                                    {% endif %}
+                                {% else %}
+                                    <button class="btn btn-unavailable btn-sm" disabled>Not Available</button>
+                                {% endif %}
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-<a href="{{ url_for('index') }}">Back to Book Titles</a>
 {% endblock %}

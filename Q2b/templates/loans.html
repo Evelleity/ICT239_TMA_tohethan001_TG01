@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-3">
+	<h5 class="fw-bold">My Loans ({{ loans|length }})</h5>
+</div>
+
+{% if loans %}
+	<div class="table-responsive">
+		<table class="table table-sm align-middle">
+			<thead class="table-light">
+				<tr>
+					<th style="min-width:220px;">Title/Author</th>
+					<th>Due Date</th>
+					<th>Return date</th>
+					<th>Renew Count</th>
+					<th class="text-end">&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for loan in loans %}
+				{% set overdue = (not loan.return_date) and (loan.due_date.date() < utcnow().date()) %}
+				<tr class="{% if loan.return_date %}table-success{% elif overdue %}table-danger{% endif %}">
+					<td>
+						<div class="d-flex align-items-start gap-2">
+							{% if loan.book.url %}<img src="{{ loan.book.url }}" alt="{{ loan.book.title }}" style="width:40px; height:auto;" class="rounded border" />{% endif %}
+							<div>
+								<a href="{{ url_for('book_details', book_id=loan.book.id) }}" class="fw-semibold text-decoration-none">{{ loan.book.title }}</a><br>
+								<small class="text-muted">By {{ loan.book.authors|join(', ') }}</small>
+							</div>
+						</div>
+					</td>
+					<td>
+						{{ loan.due_date.strftime('%d %b %Y') }}
+						{% if overdue %}<span class="badge bg-danger ms-1">Overdue</span>{% endif %}
+					</td>
+					<td>{% if loan.return_date %}{{ loan.return_date.strftime('%d %b %Y') }}{% else %}-{% endif %}</td>
+					<td>{{ loan.renew_count }}</td>
+					<td class="text-end">
+						{% if loan.return_date %}
+							<!-- Returned loans: only Delete -->
+							<form method="POST" action="{{ url_for('delete_loan', loan_id=loan.id) }}" class="d-inline" onsubmit="return confirm('Delete this loan record?');">
+								<button class="btn btn-danger btn-sm">Delete</button>
+							</form>
+						{% else %}
+							<!-- Active loans -->
+							<form method="POST" action="{{ url_for('return_loan', loan_id=loan.id) }}" class="d-inline">
+								<button class="btn btn-details btn-sm">Return</button>
+							</form>
+							{% if loan.can_renew %}
+							<form method="POST" action="{{ url_for('renew_loan', loan_id=loan.id) }}" class="d-inline ms-1">
+								<button class="btn btn-loan btn-sm">Renew</button>
+							</form>
+							{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% else %}
+	<p class="mb-0">No loan currently</p>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="btn btn-details btn-sm">Back to Books</a>
+{% endblock %}
