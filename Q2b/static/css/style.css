@@ -182,32 +182,6 @@ body {
 }
 
 /* --- Toggler Button Styles (Visible on Mobile) --- */
-    /* Stack sidebar and top-navbar above main content when collapsed */
-    .sidebar.fixed-top,
-    .top-navbar.fixed-top {
-      position: static !important;
-      width: 100%;
-      margin: 0;
-      left: 0;
-      right: 0;
-      top: 0;
-      z-index: 1000;
-    }
-    .main-content {
-      padding-top: 0 !important;
-      margin: 0 !important;
-    }
-    .content-area {
-      padding: 10px;
-    }
-    .navbar-collapse {
-      width: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    .container-fluid > .row {
-      flex-direction: column;
-    }
 .navbar-toggler {
   padding: 0.25rem 0.75rem;
   font-size: 1.25rem;

@@ -28,11 +28,10 @@
                                     {% elif current_user and is_admin %}
                                         <button class="btn btn-loan btn-sm disabled" aria-disabled="true">Admins cannot loan</button>
                                     {% else %}
-                                        <a href="{{ url_for('login') }}" class="btn btn-loan btn-sm">Please login or register first
-to get an account</a>
+                                             <a href="{{ url_for('login', next=request.path, message='Please login or register first to get an account') }}" class="btn btn-loan btn-sm me-2" title="Login required">Make a loan</a>
                                     {% endif %}
                                 {% else %}
-                                    <button class="btn btn-loan btn-sm disabled" aria-disabled="true">Admins cannot loan</button>
+                                    <button class="btn btn-loan btn-sm disabled" aria-disabled="true">No available copies</button>
                                 {% endif %}
                 </div>
             </div>

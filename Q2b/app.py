@@ -183,6 +183,9 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    message = request.args.get('message')
+    if message:
+        flash(message)
     """Email + password login."""
     if request.method == 'POST':
         email = request.form.get('email', '').strip().lower()

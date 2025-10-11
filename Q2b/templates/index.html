@@ -61,8 +61,7 @@
                     {% elif current_user and is_admin and book.available and book.available > 0 %}
                         <button class="btn btn-loan btn-sm me-2 disabled" aria-disabled="true" title="Admins cannot loan">Make a Loan</button>
                     {% elif not current_user and book.available and book.available > 0 %}
-                        <a href="{{ url_for('login') }}" class="btn btn-loan btn-sm me-2" title="Login required">Please login or register first
-to get an account</a>
+                        <a href="{{ url_for('login', next=request.path, message='Please login or register first to get an account') }}" class="btn btn-loan btn-sm me-2" title="Login required">Make a loan</a>
                     {% endif %}
                     <a href="{{ url_for('book_details', book_id=book.id) }}" class="btn btn-details btn-sm">More details</a>
                 </div>
