@@ -203,72 +203,61 @@ def logout():
     flash('Logged out.', 'info')
     return redirect(url_for('login'))
 
-@app.route('/new_book', methods=['GET', 'POST'])  # direct alias
-@app.route('/books/new', methods=['GET', 'POST'])  # original path also supported
+@app.route('/new_book', methods=['GET', 'POST'])
+@app.route('/books/new', methods=['GET', 'POST'])
 @admin_required
 def new_book():
-    """Create a new Book (admin only).
-
-        Enhancements:
-            - Authors textarea (semicolon separated) unlimited.
-      - Persist submitted form values on validation errors.
-      - On success: flash + show success link + reset form.
-    """
     form_data = {
-        'title': '', 'category': '', 'url': '', 'pages': '', 'copies': '1',
-        'description': '', 'authors_text': '', 'selected_genres': []
+        'title':'','category':'Children','url':'','pages':'','copies':'1',
+        'description':'','selected_genres':[], 'authors_text':''
     }
     created_book = None
-    if request.method == 'POST':
-        # Extract raw inputs
-        title = request.form.get('title', '').strip()
-        category = request.form.get('category', '').strip()
-        url_val = request.form.get('url', '').strip()
-        pages_raw = request.form.get('pages', '').strip()
-        copies_raw = request.form.get('copies', '').strip()
-        description_raw = request.form.get('description', '').strip()
-        authors_text = request.form.get('authors_text', '').strip()
-        selected_genres = request.form.getlist('genres')
 
-        # Persist attempted values
+    if request.method == 'POST':
+        title = request.form.get('title','').strip()
+        category = request.form.get('category','').strip()
+        url_val = request.form.get('url','').strip()
+        pages_raw = request.form.get('pages','').strip()
+        copies_raw = request.form.get('copies','').strip()
+        description_raw = request.form.get('description','')
+        selected_genres = request.form.getlist('genres')
+        authors_text = request.form.get('authors_text','').strip()
+
         form_data.update({
-            'title': title,
-            'category': category,
-            'url': url_val,
-            'pages': pages_raw,
-            'copies': copies_raw or '1',
-            'description': description_raw,
-            'authors_text': authors_text,
-            'selected_genres': selected_genres,
+            'title':title,'category':category,'url':url_val,'pages':pages_raw,
+            'copies':copies_raw,'description':description_raw,'selected_genres':selected_genres,
+            'authors_text':authors_text
         })
 
-        # Authors parsing: semicolon separated values, strip, remove duplicates preserving order
-        raw_authors = [ln.strip() for ln in authors_text.split(';')] if authors_text else []
+        # Parse semicolon-separated authors, remove duplicates, keep order
+        raw_authors = [a.strip() for a in authors_text.split(';')] if authors_text else []
         authors = []
         for a in raw_authors:
             if a and a not in authors:
                 authors.append(a)
 
+
         errors = []
         if not title:
             errors.append('Title is required.')
         if not authors:
-            errors.append('At least one author is required (separate authors with a semicolon).')
+            errors.append('At least one author is required.')
 
         pages = None
         if pages_raw:
             try:
                 pages = int(pages_raw)
                 if pages < 1:
-                    errors.append('Pages must be at least 1.')
+                    errors.append('Pages must be >= 1.')
             except ValueError:
                 errors.append('Pages must be a number.')
+
         copies = 1
         if copies_raw:
             try:
                 copies = int(copies_raw)
                 if copies < 1:
-                    errors.append('Copies must be at least 1.')
+                    errors.append('Copies must be >= 1.')
             except ValueError:
                 errors.append('Copies must be a number.')
 
@@ -276,9 +265,9 @@ def new_book():
 
         if errors:
             for e in errors:
-                flash(e, 'danger')
+                flash(e,'danger')
         else:
-            book = Book(
+            b = Book(
                 title=title,
                 authors=authors,
                 genres=selected_genres,
@@ -289,26 +278,23 @@ def new_book():
                 copies=copies,
                 available=copies
             )
-            book.save()
-            created_book = book
-            flash(f'"{book.title}" created successfully.', 'success')
-            # Reset form fields
+            b.save()
+            created_book = b
+            flash(f'"{b.title}" created successfully.','success')
+            # Reset form
             form_data = {
-                'title': '', 'category': '', 'url': '', 'pages': '', 'copies': '1',
-                'description': '', 'authors_text': '', 'selected_genres': []
+                'title':'','category':'Children','url':'','pages':'','copies':'1',
+                'description':'','selected_genres':[], 'authors_text':''
             }
 
-    # Provide genres and categories (prefer class constant if available)
-    genres_list = getattr(Book, 'GENRES', [])
-    categories_list = ["Children", "Teens", "Adults", "Reference", "Comics", "Education", "General"]
-    return render_template(
-        'new_book.html',
-        panel='NEW BOOK',
-        genres=genres_list,
-        categories=categories_list,
-        form_data=form_data,
-        created_book=created_book
-    )
+    genres_list = Book.GENRES
+    categories_list = ["Children","Teens","Adult","Reference","Comics","Education","General"]
+    return render_template('new_book.html',
+                           panel='ADD A BOOK',
+                           genres=genres_list,
+                           categories=categories_list,
+                           form_data=form_data,
+                           created_book=created_book)
 
 @app.route('/profile')
 @login_required

@@ -13,7 +13,7 @@
 				</div>
 			</div>
 			{% endif %}
-			<form method="post" class="bg-white p-3 rounded shadow-sm" novalidate>
+			<form method="POST" novalidate>
 				<div class="row mb-3">
 					<label class="col-md-2 col-form-label fw-semibold">Choose multiple<br>Genres:</label>
 					<div class="col-md-10">
@@ -55,11 +55,14 @@
 					</div>
 				</div>
 
-				<div class="row mb-4">
-					<label class="col-md-2 col-form-label fw-semibold">Authors (separate with ;):</label>
+				<div class="row mb-3">
+					<label class="col-md-2 col-form-label fw-semibold">Authors<br><span class="fw-normal small">(separate with ;)</span>:</label>
 					<div class="col-md-10">
-						<textarea name="authors_text" rows="5" class="form-control" placeholder="Jane Doe; John Smith; A. N. Other">{{ form_data.authors_text }}</textarea>
-						<div class="form-text">Enter authors separated by a semicolon. Example: Jane Doe; John Smith; A. N. Other. Duplicates automatically removed.</div>
+						<textarea name="authors_text" rows="3" class="form-control"
+								  placeholder="Jane Doe; John Smith (Illustrator); A. N. Other">{{ form_data.authors_text }}</textarea>
+						<div class="form-text">
+							Duplicates removed automatically.
+						</div>
 					</div>
 				</div>
 
@@ -70,8 +73,8 @@
 					<div class="col-md-4"><input type="number" min="1" name="copies" value="{{ form_data.copies }}" class="form-control" required></div>
 				</div>
 
-				<div class="d-flex justify-content-end mt-4">
-					<button type="submit" class="btn btn-success px-5">Submit</button>
+				<div class="d-flex justify-content-end">
+					<button class="btn btn-search px-4" type="submit">Submit</button>
 				</div>
 			</form>
 		</div>

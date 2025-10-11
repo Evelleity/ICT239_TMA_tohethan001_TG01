@@ -23,7 +23,7 @@
 				<tr class="{% if loan.return_date %}table-success{% elif overdue %}table-danger{% endif %}">
 					<td>
 						<div class="d-flex align-items-start gap-2">
-							{% if loan.book.url %}<img src="{{ loan.book.url }}" alt="{{ loan.book.title }}" style="width:40px; height:auto;" class="rounded border" />{% endif %}
+							{% if loan.book.url %}<img src="{{ loan.book.url }}" alt="{{ loan.book.title }}" class="rounded border book-cover" />{% endif %}
 							<div>
 								<a href="{{ url_for('book_details', book_id=loan.book.id) }}" class="fw-semibold text-decoration-none">{{ loan.book.title }}</a><br>
 								<small class="text-muted">By {{ loan.book.authors|join(', ') }}</small>

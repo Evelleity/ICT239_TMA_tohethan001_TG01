@@ -182,6 +182,32 @@ body {
 }
 
 /* --- Toggler Button Styles (Visible on Mobile) --- */
+    /* Stack sidebar and top-navbar above main content when collapsed */
+    .sidebar.fixed-top,
+    .top-navbar.fixed-top {
+      position: static !important;
+      width: 100%;
+      margin: 0;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 1000;
+    }
+    .main-content {
+      padding-top: 0 !important;
+      margin: 0 !important;
+    }
+    .content-area {
+      padding: 10px;
+    }
+    .navbar-collapse {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .container-fluid > .row {
+      flex-direction: column;
+    }
 .navbar-toggler {
   padding: 0.25rem 0.75rem;
   font-size: 1.25rem;
@@ -256,3 +282,43 @@ body {
   background: rgba(0,0,0,0.08);
   backdrop-filter: blur(2px);
 }
+
+/* Standard cover sizes */
+.book-image {
+  width: 100%;
+  object-fit: cover;    /* crop to fill without distortion */
+  display: block;
+
+}
+
+.loan-thumb {
+  width: 40px;          /* small thumbnail in loans table */
+  height: 60px;         /* same 2:3 aspect */
+  object-fit: cover;
+  object-position: center;
+  display: inline-block;
+}
+
+/* Optional: responsive tweak */
+@media (max-width: 576px) {
+  .book-card .row {
+    display: flex;
+    flex-direction: column !important;
+    align-items: center;
+  }
+  .book-card .col-md-2,
+  .book-card .col-md-10 {
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+  .book-card .book-image {
+    margin: 0 auto 1rem auto;
+    display: block;
+  }
+  .book-card .card-body {
+    padding-top: 0;
+    text-align: center;
+  }
+}
+
+
